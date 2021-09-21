@@ -8,15 +8,10 @@ public func XCTAssertJSONCoding<T>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
-) rethrows where T: Codable, T: Equatable {
+) throws where T: Codable, T: Equatable {
     let codable = try codable()
-    XCTAssertNoDifference(
-        try decoder.decode(T.self, from: encoder.encode(codable)),
-        codable,
-        message(),
-        file: file,
-        line: line
-    )
+    let sut = try decoder.decode(T.self, from: encoder.encode(codable))
+    XCTAssertNoDifference(sut, codable, message(), file: file, line: line)
 }
 
 public func XCTAssertJSONCoding<T>(
@@ -26,10 +21,10 @@ public func XCTAssertJSONCoding<T>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
-) where T: Codable, T: Equatable, T: CaseIterable {
+) throws where T: Codable, T: Equatable, T: CaseIterable {
     let allCases = codableEnum.allCases
     for `case` in allCases {
-        XCTAssertJSONCoding(`case`, encoder, decoder, message(), file: file, line: line)
+        try XCTAssertJSONCoding(`case`, encoder, decoder, message(), file: file, line: line)
     }
 }
 
@@ -40,16 +35,10 @@ public func XCTAssertJSONEncoding<T>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
-) rethrows where T: Encodable {
-    let encodable = try encodable()
+) throws where T: Encodable {
+    let sut = try JSON(of: encodable(), encoder: encoder)
     let json = try json()
-    XCTAssertNoDifference(
-        try JSON(of: encodable, encoder: encoder),
-        json,
-        message(),
-        file: file,
-        line: line
-    )
+    XCTAssertNoDifference(sut, json, message(), file: file, line: line)
 }
 
 public func XCTAssertJSONDecoding<T>(
@@ -59,14 +48,8 @@ public func XCTAssertJSONDecoding<T>(
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
-) rethrows where T: Decodable, T: Equatable {
-    let json = try json()
+) throws where T: Decodable, T: Equatable {
+    let sut = try json().as(T.self, decoder: decoder)
     let decodable = try decodable()
-    XCTAssertNoDifference(
-        try json.as(T.self, decoder: decoder),
-        decodable,
-        message(),
-        file: file,
-        line: line
-    )
+    XCTAssertNoDifference(sut, decodable, message(), file: file, line: line)
 }

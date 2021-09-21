@@ -3,12 +3,12 @@ import XCTJSONKit
 final class XCTAssertJSONTests: XCTestCase {
     func testXCTAssertJSONCoding() throws {
         struct Empty: Codable, Equatable {}
-        XCTAssertJSONCoding(Empty())
+        try XCTAssertJSONCoding(Empty())
 
         enum GoodSingleValue: String, Codable, CaseIterable, Equatable {
             case one, two, three
         }
-        XCTAssertJSONCoding(GoodSingleValue.one)
+        try XCTAssertJSONCoding(GoodSingleValue.one)
 
         enum BadSingleValue: String, Codable, CaseIterable, Equatable {
             case one, two, three
@@ -18,13 +18,13 @@ final class XCTAssertJSONTests: XCTestCase {
             }
         }
         XCTExpectFailure(options: Self.options)
-        XCTAssertJSONCoding(BadSingleValue.one)
+        try XCTAssertJSONCoding(BadSingleValue.one)
 
         struct GoodMultipleValue: Codable, Equatable {
             var string: String
             var int: Int
         }
-        XCTAssertJSONCoding(GoodMultipleValue(string: "a", int: 3))
+        try XCTAssertJSONCoding(GoodMultipleValue(string: "a", int: 3))
 
         struct BadMultipleValue: Codable, Equatable {
             var string: String
@@ -34,19 +34,19 @@ final class XCTAssertJSONTests: XCTestCase {
 
             func encode(to encoder: Encoder) throws {
                 var container = encoder.container(keyedBy: CodingKeys.self)
-                try container.encode(string, forKey: .int)
-                try container.encode(int, forKey: .string)
+                try container.encode(string, forKey: .string)
+                try container.encode(int + 1, forKey: .int)
             }
         }
         XCTExpectFailure(options: Self.options)
-        XCTAssertJSONCoding(BadMultipleValue(string: "a", int: 3))
+        try XCTAssertJSONCoding(BadMultipleValue(string: "a", int: 3))
     }
 
     func testXCTAssertJSONCoding_enum() throws {
         enum GoodEnum: String, Codable, CaseIterable {
             case one, two, three
         }
-        XCTAssertJSONCoding(GoodEnum.self)
+        try XCTAssertJSONCoding(GoodEnum.self)
 
         enum BadEnum: String, Codable, CaseIterable {
             case one, two, three
@@ -56,7 +56,7 @@ final class XCTAssertJSONTests: XCTestCase {
             }
         }
         XCTExpectFailure(options: Self.options)
-        XCTAssertJSONCoding(BadEnum.self)
+        try XCTAssertJSONCoding(BadEnum.self)
     }
 
     func testXCTAssertJSONEncoding() throws {
