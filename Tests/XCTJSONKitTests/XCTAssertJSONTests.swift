@@ -91,13 +91,13 @@ final class XCTAssertJSONTests: XCTestCase {
         }
         try XCTAssertJSONEncoding(
             MultipleValue(string: "a", int: 3),
-            JSON(["string": "a", "int": 3] as [String: AnyHashable])
+            JSON(["string": "a", "int": 3])
         )
         #if !os(Linux)
         XCTExpectFailure(options: Self.options)
         try XCTAssertJSONEncoding(
             MultipleValue(string: "b", int: 4),
-            JSON(["string": "a", "int": 3] as [String: AnyHashable])
+            JSON(["string": "a", "int": 3])
         )
         #endif
     }
@@ -123,13 +123,13 @@ final class XCTAssertJSONTests: XCTestCase {
             var int: Int
         }
         try XCTAssertJSONDecoding(
-            JSON(["string": "a", "int": 3] as [String: AnyHashable]),
+            JSON(["string": "a", "int": 3]),
             MultipleValue(string: "a", int: 3)
         )
         #if !os(Linux)
         XCTExpectFailure(options: Self.options)
         try XCTAssertJSONDecoding(
-            JSON(["string": "a", "int": 3] as [String: AnyHashable]),
+            JSON(["string": "a", "int": 3]),
             MultipleValue(string: "b", int: 4)
         )
         #endif

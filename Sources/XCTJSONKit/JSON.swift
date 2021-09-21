@@ -4,62 +4,56 @@ import Foundation
 public struct JSON: Equatable {
     public enum Error: LocalizedError {
         case failedDataToUT8StringConversion(Data)
-        case invalidData(Data)
-        case invalidRawJSON(String)
+        case failedUT8StringToDataConversion(String)
 
         public var errorDescription: String? {
             switch self {
             case .failedDataToUT8StringConversion(let data):
                 return "Failed to convert Data into UTF-8 string: '\(data)'"
-            case .invalidData(let data):
-                return "Invalid data to JSON value serialization: '\(data)'"
-            case .invalidRawJSON(let rawJSON):
-                return "Invalid raw JSON value serialization: '\(rawJSON)'"
+            case .failedUT8StringToDataConversion(let string):
+                return "Failed to convert UTF-8 string into Data: '\(string)'"
             }
         }
     }
 
-    public let jsonObject: AnyHashable
+    public let tree: JSONTree
     public let data: Data
     public let raw: String
 
-    public init<T>(_ jsonObject: T) throws where T: Hashable {
-        let data = try Self.dataFromJSONObject(jsonObject)
-        let jsonObject = try Self.jsonObjectFromData(data)
+    public init(_ jsonTree: JSONTree) throws {
+        let data = try Self.data(from: jsonTree)
+        let tree = try Self.jsonTree(from: data)
         guard let raw = String(data: data, encoding: .utf8) else {
             throw Error.failedDataToUT8StringConversion(data)
         }
-        self.jsonObject = jsonObject
+        self.tree = tree
         self.data = data
         self.raw = raw
     }
 
     public init(_ data: Data) throws {
-        try self.init(Self.jsonObjectFromData(data))
+        try self.init(Self.jsonTree(from: data))
     }
 
     public init(raw rawJSON: String) throws {
         guard let data = rawJSON.data(using: .utf8) else {
-            throw Error.invalidRawJSON(rawJSON)
+            throw Error.failedUT8StringToDataConversion(rawJSON)
         }
         try self.init(data)
     }
 
-    private static func dataFromJSONObject(_ jsonObject: AnyHashable) throws -> Data {
+    private static func data(from jsonTree: JSONTree) throws -> Data {
         try JSONSerialization.data(
-            withJSONObject: jsonObject,
+            withJSONTree: jsonTree,
             options: [.fragmentsAllowed, .sortedKeys, .withoutEscapingSlashes]
         )
     }
 
-    private static func jsonObjectFromData(_ data: Data) throws -> AnyHashable {
-        guard let jsonObject = try JSONSerialization.jsonObject(
+    private static func jsonTree(from data: Data) throws -> JSONTree {
+        try JSONSerialization.jsonTree(
             with: data,
-            options: [.allowFragments]
-        ) as? AnyHashable else {
-            throw Error.invalidData(data)
-        }
-        return jsonObject
+            options: [.fragmentsAllowed]
+        )
     }
 }
 
@@ -71,13 +65,5 @@ extension JSON {
 
     public func `as`<T: Decodable>(_ type: T.Type, decoder: JSONDecoder = JSONDecoder()) throws -> T {
         try decoder.decode(type, from: data)
-    }
-}
-
-extension JSON {
-    public static var null: JSON {
-        get throws {
-            try JSON(NSNull())
-        }
     }
 }
