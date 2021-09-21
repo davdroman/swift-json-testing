@@ -3,8 +3,8 @@ import XCTest
 
 public func XCTAssertJSONCoding<T>(
     _ codable: @autoclosure () throws -> T,
-    _ encoder: JSONEncoder = JSONEncoder(),
-    _ decoder: JSONDecoder = JSONDecoder(),
+    encoder: JSONEncoder = JSONEncoder(),
+    decoder: JSONDecoder = JSONDecoder(),
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
@@ -16,22 +16,22 @@ public func XCTAssertJSONCoding<T>(
 
 public func XCTAssertJSONCoding<T>(
     _ codableEnum: T.Type,
-    _ encoder: JSONEncoder = JSONEncoder(),
-    _ decoder: JSONDecoder = JSONDecoder(),
+    encoder: JSONEncoder = JSONEncoder(),
+    decoder: JSONDecoder = JSONDecoder(),
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
 ) throws where T: Codable, T: Equatable, T: CaseIterable {
     let allCases = codableEnum.allCases
     for `case` in allCases {
-        try XCTAssertJSONCoding(`case`, encoder, decoder, message(), file: file, line: line)
+        try XCTAssertJSONCoding(`case`, encoder: encoder, decoder: decoder, message(), file: file, line: line)
     }
 }
 
 public func XCTAssertJSONEncoding<T>(
     _ encodable: @autoclosure () throws -> T,
     _ json: @autoclosure () throws -> JSON,
-    _ encoder: JSONEncoder = JSONEncoder(),
+    encoder: JSONEncoder = JSONEncoder(),
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
@@ -44,7 +44,7 @@ public func XCTAssertJSONEncoding<T>(
 public func XCTAssertJSONDecoding<T>(
     _ json: @autoclosure () throws -> JSON,
     _ decodable: @autoclosure () throws -> T,
-    _ decoder: JSONDecoder = JSONDecoder(),
+    decoder: JSONDecoder = JSONDecoder(),
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
