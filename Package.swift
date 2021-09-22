@@ -15,8 +15,7 @@ let package = Package(
     targets: [
         .target(
             name: "XCTJSONKit",
-            dependencies: [.product(name: "CustomDump", package: "swift-custom-dump")],
-            linkerSettings: [.linkedFramework("XCTest")]
+            dependencies: [.product(name: "CustomDump", package: "swift-custom-dump")]
         ),
         .testTarget(name: "XCTJSONKitTests", dependencies: [
             .target(name: "XCTJSONKit"),
@@ -25,5 +24,5 @@ let package = Package(
 )
 
 package.dependencies = [
-    .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "0.1.3"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump", .branch("main")),
 ]
