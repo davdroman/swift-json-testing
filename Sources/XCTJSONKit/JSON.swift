@@ -52,7 +52,7 @@ public struct JSON: Equatable {
     private static func jsonTree(from data: Data) throws -> JSONTree {
         try JSONSerialization.jsonTree(
             with: data,
-            options: [.fragmentsAllowed]
+            options: [.allowFragments]
         )
     }
 }
