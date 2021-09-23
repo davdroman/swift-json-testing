@@ -24,5 +24,5 @@ let package = Package(
 )
 
 package.dependencies = [
-    .package(url: "https://github.com/pointfreeco/swift-custom-dump", .branch("main")),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "0.2.0"),
 ]
