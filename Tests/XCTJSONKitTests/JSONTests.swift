@@ -4,61 +4,61 @@ import XCTJSONKit
 final class JSONTests: XCTestCase {
     func testBasicInits() throws {
         // strings
-        try assert(jsonTree: "", raw: #""""#)
-        try assert(jsonTree: "hello world", raw: #""hello world""#)
-        try assert(jsonTree: "hello world\nit's me", raw: #""hello world\nit's me""#)
+        try assert(json: "", raw: #""""#)
+        try assert(json: "hello world", raw: #""hello world""#)
+        try assert(json: "hello world\nit's me", raw: #""hello world\nit's me""#)
 
         // numbers
-        try assert(jsonTree: -3, raw: #"-3"#)
-        try assert(jsonTree: 0, raw: #"0"#)
-        try assert(jsonTree: 3, raw: #"3"#)
-        try assert(jsonTree: 3.25, raw: #"3.25"#)
+        try assert(json: -3, raw: #"-3"#)
+        try assert(json: 0, raw: #"0"#)
+        try assert(json: 3, raw: #"3"#)
+        try assert(json: 3.25, raw: #"3.25"#)
 
         // objects
-        try assert(jsonTree: [:], raw: #"{}"#)
-        try assert(jsonTree: ["": ""], raw: #"{"":""}"#)
-        try assert(jsonTree: ["key": "value"], raw: #"{"key":"value"}"#)
-        try assert(jsonTree: ["key": 1], raw: #"{"key":1}"#)
-        try assert(jsonTree: ["key": ["otherKey": "value"]], raw: #"{"key":{"otherKey":"value"}}"#)
-        try assert(jsonTree: ["key": ["value1", "value2"]], raw: #"{"key":["value1","value2"]}"#)
-        try assert(jsonTree: ["key": true], raw: #"{"key":true}"#)
-        try assert(jsonTree: ["key": nil], raw: #"{"key":null}"#)
+        try assert(json: [:], raw: #"{}"#)
+        try assert(json: ["": ""], raw: #"{"":""}"#)
+        try assert(json: ["key": "value"], raw: #"{"key":"value"}"#)
+        try assert(json: ["key": 1], raw: #"{"key":1}"#)
+        try assert(json: ["key": ["otherKey": "value"]], raw: #"{"key":{"otherKey":"value"}}"#)
+        try assert(json: ["key": ["value1", "value2"]], raw: #"{"key":["value1","value2"]}"#)
+        try assert(json: ["key": true], raw: #"{"key":true}"#)
+        try assert(json: ["key": nil], raw: #"{"key":null}"#)
 
         // arrays
-        try assert(jsonTree: [], raw: #"[]"#)
-        try assert(jsonTree: ["", "hello", "world"], raw: #"["","hello","world"]"#)
-        try assert(jsonTree: ["", "hello", "world"], raw: #"["","hello","world"]"#)
-        try assert(jsonTree: [1, 2, 3], raw: #"[1,2,3]"#)
-        try assert(jsonTree: [["key": "value"]], raw: #"[{"key":"value"}]"#)
-        try assert(jsonTree: [[1, 2, 3]], raw: #"[[1,2,3]]"#)
-        try assert(jsonTree: [true, false, true], raw: #"[true,false,true]"#)
-        try assert(jsonTree: [nil, nil, nil], raw: #"[null,null,null]"#)
+        try assert(json: [], raw: #"[]"#)
+        try assert(json: ["", "hello", "world"], raw: #"["","hello","world"]"#)
+        try assert(json: ["", "hello", "world"], raw: #"["","hello","world"]"#)
+        try assert(json: [1, 2, 3], raw: #"[1,2,3]"#)
+        try assert(json: [["key": "value"]], raw: #"[{"key":"value"}]"#)
+        try assert(json: [[1, 2, 3]], raw: #"[[1,2,3]]"#)
+        try assert(json: [true, false, true], raw: #"[true,false,true]"#)
+        try assert(json: [nil, nil, nil], raw: #"[null,null,null]"#)
 
         // booleans
-        try assert(jsonTree: true, raw: #"true"#)
-        try assert(jsonTree: false, raw: #"false"#)
+        try assert(json: true, raw: #"true"#)
+        try assert(json: false, raw: #"false"#)
 
         // null
-        try assert(jsonTree: nil, raw: #"null"#)
+        try assert(json: nil, raw: #"null"#)
     }
 
     func testEncodableConversion() throws {
         struct Empty: Encodable {}
-        try assert(json: JSON(of: Empty()), jsonTree: [:], raw: #"{}"#)
+        try assert(originalJSON: JSON(of: Empty()), json: [:], raw: #"{}"#)
 
         enum SingleValue: String, Encodable, CaseIterable {
             case one, two, three
         }
-        try assert(json: JSON(of: SingleValue.one), jsonTree: "one", raw: #""one""#)
-        try assert(json: JSON(of: SingleValue.allCases), jsonTree: ["one", "two", "three"], raw: #"["one","two","three"]"#)
+        try assert(originalJSON: JSON(of: SingleValue.one), json: "one", raw: #""one""#)
+        try assert(originalJSON: JSON(of: SingleValue.allCases), json: ["one", "two", "three"], raw: #"["one","two","three"]"#)
 
         struct MultipleValue: Encodable {
             var string: String
             var int: Int
         }
         try assert(
-            json: JSON(of: MultipleValue(string: "a", int: 3)),
-            jsonTree: ["string": "a", "int": 3],
+            originalJSON: JSON(of: MultipleValue(string: "a", int: 3)),
+            json: ["string": "a", "int": 3],
             raw: #"{"int":3,"string":"a"}"#
         )
     }
@@ -82,24 +82,68 @@ final class JSONTests: XCTestCase {
             MultipleValue(string: "a", int: 3)
         )
     }
+
+    func testDebugDescription() {
+        XCTAssertNoDifference(
+            JSON("foobar").debugDescription,
+            """
+            "foobar"
+            """
+        )
+        XCTAssertNoDifference(
+            JSON(3).debugDescription,
+            """
+            3
+            """
+        )
+        XCTAssertNoDifference(
+            JSON(["hello", "world"]).debugDescription,
+            """
+            [
+              "hello",
+              "world"
+            ]
+            """
+        )
+        XCTAssertNoDifference(
+            JSON(["key": "value"]).debugDescription,
+            """
+            {
+              "key" : "value"
+            }
+            """
+        )
+        XCTAssertNoDifference(
+            JSON(true).debugDescription,
+            """
+            true
+            """
+        )
+        XCTAssertNoDifference(
+            JSON(nil).debugDescription,
+            """
+            null
+            """
+        )
+    }
 }
 
 private extension JSONTests {
     func assert(
-        json: JSON? = nil,
-        jsonTree: JSONTree,
+        originalJSON: JSON? = nil,
+        json: JSON,
         raw: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
         let suts = try [
-            (json != nil ? "Original JSON" : "init(_ jsonObject:)", json ?? JSON(jsonTree)),
+            (originalJSON != nil ? "originalJSON" : "json", originalJSON ?? json),
             ("init(raw:)", JSON(raw: raw))
         ]
         for (origin, sut) in suts {
-            XCTAssertNoDifference(sut.tree, jsonTree, "\(origin) - 'jsonObject' property", file: file, line: line)
-            XCTAssert(sut.data.count > 0, "\(origin) - 'data' is empty", file: file, line: line)
-            XCTAssertNoDifference(sut.raw, raw, "\(origin) - 'raw' property", file: file, line: line)
+            XCTAssertNoDifference(sut, json, "\(origin) - self", file: file, line: line)
+            XCTAssert(sut.data.count > 0, "\(origin) - data is empty", file: file, line: line)
+            XCTAssertNoDifference(sut.raw, raw, "\(origin) - raw", file: file, line: line)
         }
     }
 }
