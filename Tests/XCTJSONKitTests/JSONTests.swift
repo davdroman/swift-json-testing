@@ -44,21 +44,20 @@ final class JSONTests: XCTestCase {
 
     func testEncodableConversion() throws {
         struct Empty: Encodable {}
-        try assert(originalJSON: JSON(of: Empty()), json: [:], raw: #"{}"#)
+        try assert(json: JSON(of: Empty()), [:], raw: #"{}"#)
 
         enum SingleValue: String, Encodable, CaseIterable {
             case one, two, three
         }
-        try assert(originalJSON: JSON(of: SingleValue.one), json: "one", raw: #""one""#)
-        try assert(originalJSON: JSON(of: SingleValue.allCases), json: ["one", "two", "three"], raw: #"["one","two","three"]"#)
+        try assert(json: JSON(of: SingleValue.one), "one", raw: #""one""#)
+        try assert(json: JSON(of: SingleValue.allCases), ["one", "two", "three"], raw: #"["one","two","three"]"#)
 
         struct MultipleValue: Encodable {
             var string: String
             var int: Int
         }
         try assert(
-            originalJSON: JSON(of: MultipleValue(string: "a", int: 3)),
-            json: ["string": "a", "int": 3],
+            json: JSON(of: MultipleValue(string: "a", int: 3)), ["string": "a", "int": 3],
             raw: #"{"int":3,"string":"a"}"#
         )
     }
@@ -130,20 +129,33 @@ final class JSONTests: XCTestCase {
 
 private extension JSONTests {
     func assert(
-        originalJSON: JSON? = nil,
-        json: JSON,
+        json: JSON...,
         raw: String,
         file: StaticString = #filePath,
         line: UInt = #line
     ) throws {
-        let suts = try [
-            (originalJSON != nil ? "originalJSON" : "json", originalJSON ?? json),
-            ("init(raw:)", JSON(raw: raw))
-        ]
-        for (origin, sut) in suts {
-            XCTAssertNoDifference(sut, json, "\(origin) - self", file: file, line: line)
-            XCTAssert(sut.data.count > 0, "\(origin) - data is empty", file: file, line: line)
-            XCTAssertNoDifference(sut.raw, raw, "\(origin) - raw", file: file, line: line)
+        let pairs: PairSequence<[JSON]>
+        if json.count == 1 {
+            pairs = .init(sequence: [json[0], json[0]])
+        } else {
+            pairs = json.adjacentPairs()
+        }
+
+        for (lhsIndex, (lhs, rhs)) in pairs.enumerated() {
+            let rhsIndex = lhsIndex + 1
+
+            let indexes = "#\(lhsIndex), #\(rhsIndex)"
+            XCTAssertNoDifference(lhs, rhs, "json at indexes \(indexes)", file: file, line: line)
+            XCTAssertNoDifference(lhs.data, rhs.data, "json.data at indexes \(indexes)", file: file, line: line)
+            XCTAssertNoDifference(lhs.raw, rhs.raw, "json.raw at indexes \(indexes)", file: file, line: line)
+
+            let jsonFromRaw = try JSON(raw: raw)
+            XCTAssertNoDifference(lhs, jsonFromRaw, "json at index \(lhsIndex) and json from raw", file: file, line: line)
+            XCTAssertNoDifference(rhs, jsonFromRaw, "json at index \(rhsIndex) and json from raw", file: file, line: line)
+            XCTAssertNoDifference(lhs.data, jsonFromRaw.data, "json.data at index \(lhsIndex) and json.data from raw", file: file, line: line)
+            XCTAssertNoDifference(rhs.data, jsonFromRaw.data, "json.data at index \(rhsIndex) and json.data from raw", file: file, line: line)
+            XCTAssertNoDifference(lhs.raw, jsonFromRaw.raw, "json.raw at index \(lhsIndex) and json.raw from raw", file: file, line: line)
+            XCTAssertNoDifference(rhs.raw, jsonFromRaw.raw, "json.raw at index \(rhsIndex) and json.raw from raw", file: file, line: line)
         }
     }
 }
