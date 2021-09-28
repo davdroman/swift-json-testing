@@ -4,7 +4,7 @@ import XCTJSONKit
 final class JSONTests: XCTestCase {
     func testBasicInits() throws {
         // strings
-        try assert(json: "", raw: #""""#)
+        try assert(json: "", raw: "\"\"")
         try assert(json: "hello world", raw: #""hello world""#)
         try assert(json: "hello world\nit's me", raw: #""hello world\nit's me""#)
 
