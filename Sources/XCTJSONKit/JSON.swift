@@ -34,9 +34,7 @@ public enum JSON: Hashable {
     
     public func formatted(pretty: Bool) -> String {
         let data = Self.data(from: self, pretty: pretty)
-        guard let string = String(data: data, encoding: .utf8) else {
-            preconditionFailure("Failed to convert Data into UTF-8 string: '\(data)'")
-        }
+        let string = String(decoding: data, as: UTF8.self)
         return string
     }
 
