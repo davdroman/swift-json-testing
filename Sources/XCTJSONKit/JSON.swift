@@ -8,17 +8,6 @@ public enum JSON: Hashable {
     case bool(Bool)
     case null
 
-    public enum Error: LocalizedError {
-        case failedUT8StringToDataConversion(String)
-
-        public var errorDescription: String? {
-            switch self {
-            case .failedUT8StringToDataConversion(let string):
-                return "Failed to convert UTF-8 string into Data: '\(string)'"
-            }
-        }
-    }
-
     public init(_ json: JSON) {
         self = json
     }
@@ -31,9 +20,7 @@ public enum JSON: Hashable {
     }
 
     public init(raw rawJSON: String) throws {
-        guard let data = rawJSON.data(using: .utf8) else {
-            throw Error.failedUT8StringToDataConversion(rawJSON)
-        }
+        let data = Data(rawJSON.utf8)
         try self.init(data: data)
     }
 
