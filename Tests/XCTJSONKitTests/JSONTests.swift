@@ -13,6 +13,7 @@ final class JSONTests: XCTestCase {
         try assert(json: 0, raw: #"0"#)
         try assert(json: 3, raw: #"3"#)
         try assert(json: 3.25, raw: #"3.25"#)
+        try assert(json: .number(.init(string: "1234567890.0123456789")!), raw: #"1234567890.0123456789"#)
 
         // objects
         try assert(json: [:], raw: #"{}"#)
@@ -90,9 +91,9 @@ final class JSONTests: XCTestCase {
             """
         )
         XCTAssertNoDifference(
-            JSON.number(3).debugDescription,
+            JSON.number(.init(string: "1234567890.0123456789")!).debugDescription,
             """
-            3
+            1234567890.0123456789
             """
         )
         XCTAssertNoDifference(

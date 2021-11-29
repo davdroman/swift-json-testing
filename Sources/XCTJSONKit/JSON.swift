@@ -2,7 +2,7 @@ import Foundation
 
 public enum JSON: Hashable {
     case string(String)
-    case number(Double)
+    case number(Decimal)
     indirect case object([String: JSON])
     indirect case array([JSON])
     case bool(Bool)

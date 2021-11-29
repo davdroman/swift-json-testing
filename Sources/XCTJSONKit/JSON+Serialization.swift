@@ -48,7 +48,7 @@ extension JSON {
             if nsNumber.isBoolValue {
                 self = .bool(nsNumber.boolValue)
             } else {
-                self = .number(nsNumber.doubleValue)
+                self = .number(nsNumber.decimalValue)
             }
         case let object as [String: Any]:
             self = .object(object.compactMapValues(JSON.init))

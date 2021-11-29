@@ -8,13 +8,13 @@ extension JSON: ExpressibleByStringLiteral {
 
 extension JSON: ExpressibleByIntegerLiteral {
     public init(integerLiteral value: IntegerLiteralType) {
-        self = .number(Double(value))
+        self = .number(Decimal(value))
     }
 }
 
 extension JSON: ExpressibleByFloatLiteral {
     public init(floatLiteral value: FloatLiteralType) {
-        self = .number(value)
+        self = .number(Decimal(value))
     }
 }
 
