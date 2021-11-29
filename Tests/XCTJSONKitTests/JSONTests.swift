@@ -84,19 +84,19 @@ final class JSONTests: XCTestCase {
 
     func testDebugDescription() {
         XCTAssertNoDifference(
-            JSON("foobar").debugDescription,
+            JSON.string("foobar").debugDescription,
             """
             "foobar"
             """
         )
         XCTAssertNoDifference(
-            JSON(3).debugDescription,
+            JSON.number(3).debugDescription,
             """
             3
             """
         )
         XCTAssertNoDifference(
-            JSON(["hello", "world"]).debugDescription,
+            JSON.array(["hello", "world"]).debugDescription,
             """
             [
               "hello",
@@ -105,7 +105,7 @@ final class JSONTests: XCTestCase {
             """
         )
         XCTAssertNoDifference(
-            JSON(["key": "value"]).debugDescription,
+            JSON.object(["key": "value"]).debugDescription,
             """
             {
               "key" : "value"
@@ -113,13 +113,13 @@ final class JSONTests: XCTestCase {
             """
         )
         XCTAssertNoDifference(
-            JSON(true).debugDescription,
+            JSON.bool(true).debugDescription,
             """
             true
             """
         )
         XCTAssertNoDifference(
-            JSON(nil).debugDescription,
+            JSON.null.debugDescription,
             """
             null
             """
