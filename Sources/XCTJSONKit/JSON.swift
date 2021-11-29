@@ -42,7 +42,12 @@ public enum JSON: Hashable {
         do {
             return try JSONSerialization.data(
                 withJSON: json,
-                options: [.fragmentsAllowed, .sortedKeys, .withoutEscapingSlashes, pretty ? .prettyPrinted : []]
+                options: [
+                    .fragmentsAllowed,
+                    .sortedKeys,
+                    .withoutEscapingSlashes,
+                    pretty ? .prettyPrinted : [],
+                ]
             )
         } catch {
             preconditionFailure(error.localizedDescription)
