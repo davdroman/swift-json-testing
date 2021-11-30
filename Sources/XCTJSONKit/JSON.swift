@@ -24,6 +24,10 @@ public enum JSON: Hashable {
         try self.init(data: data)
     }
 
+    public static func raw(_ rawJSON: String) throws -> Self {
+        try Self(raw: rawJSON)
+    }
+
     public var data: Data {
         Self.data(from: self, pretty: false)
     }

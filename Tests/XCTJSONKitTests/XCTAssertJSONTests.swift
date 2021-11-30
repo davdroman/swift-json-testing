@@ -67,10 +67,10 @@ final class XCTAssertJSONTests: XCTestCase {
 
     func testXCTAssertJSONEncoding() throws {
         struct Empty: Encodable {}
-        try XCTAssertJSONEncoding(Empty(), JSON(raw: #"{}"#))
+        try XCTAssertJSONEncoding(Empty(), .raw(#"{}"#))
         #if !os(Linux)
         XCTExpectFailure(options: Self.options)
-        try XCTAssertJSONEncoding(Empty(), JSON(raw: #"[]"#))
+        try XCTAssertJSONEncoding(Empty(), .raw(#"[]"#))
         #endif
 
         enum SingleValue: String, Encodable, CaseIterable {
@@ -104,7 +104,7 @@ final class XCTAssertJSONTests: XCTestCase {
 
     func testXCTAssertJSONDecoding() throws {
         struct Empty: Decodable, Equatable {}
-        try XCTAssertJSONDecoding(JSON(raw: #"{}"#), Empty())
+        try XCTAssertJSONDecoding(.raw(#"{}"#), Empty())
 
         enum SingleValue: String, Decodable, CaseIterable, Equatable {
             case one, two, three
