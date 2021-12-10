@@ -3,8 +3,8 @@ import XCTest
 
 public func XCTAssertJSONCoding<T>(
     _ codable: @autoclosure () throws -> T,
-    encoder: JSONEncoder = JSONEncoder(),
-    decoder: JSONDecoder = JSONDecoder(),
+    encoder: JSONEncoder = XCTAssertJSON.configuration.encoder,
+    decoder: JSONDecoder = XCTAssertJSON.configuration.decoder,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
@@ -16,8 +16,8 @@ public func XCTAssertJSONCoding<T>(
 
 public func XCTAssertJSONCoding<T>(
     _ codableEnum: T.Type,
-    encoder: JSONEncoder = JSONEncoder(),
-    decoder: JSONDecoder = JSONDecoder(),
+    encoder: JSONEncoder = XCTAssertJSON.configuration.encoder,
+    decoder: JSONDecoder = XCTAssertJSON.configuration.decoder,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
@@ -31,7 +31,7 @@ public func XCTAssertJSONCoding<T>(
 public func XCTAssertJSONEncoding<T>(
     _ encodable: @autoclosure () throws -> T,
     _ json: @autoclosure () throws -> JSON,
-    encoder: JSONEncoder = JSONEncoder(),
+    encoder: JSONEncoder = XCTAssertJSON.configuration.encoder,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
@@ -44,7 +44,7 @@ public func XCTAssertJSONEncoding<T>(
 public func XCTAssertJSONDecoding<T>(
     _ json: @autoclosure () throws -> JSON,
     _ decodable: @autoclosure () throws -> T,
-    decoder: JSONDecoder = JSONDecoder(),
+    decoder: JSONDecoder = XCTAssertJSON.configuration.decoder,
     _ message: @autoclosure () -> String = "",
     file: StaticString = #filePath,
     line: UInt = #line
