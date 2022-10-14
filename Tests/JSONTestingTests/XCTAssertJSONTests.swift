@@ -1,4 +1,4 @@
-import XCTJSONKit
+import JSONTesting
 
 final class XCTAssertJSONTests: XCTestCase {
     func testXCTAssertJSONCoding() throws {

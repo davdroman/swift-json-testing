@@ -1,5 +1,5 @@
 import CustomDump
-import XCTJSONKit
+import JSONTesting
 
 final class JSONTests: XCTestCase {
     func testBasicInits() throws {

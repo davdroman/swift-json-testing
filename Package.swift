@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "XCTJSONKit",
+    name: "swift-json-testing",
     platforms: [
         .iOS(.v13),
         .macOS(.v10_15),
@@ -12,15 +12,15 @@ let package = Package(
         .watchOS(.v6),
     ],
     products: [
-        .library(name: "XCTJSONKit", targets: ["XCTJSONKit"]),
+        .library(name: "JSONTesting", targets: ["JSONTesting"]),
     ],
     targets: [
         .target(
-            name: "XCTJSONKit",
+            name: "JSONTesting",
             dependencies: [.product(name: "CustomDump", package: "swift-custom-dump")]
         ),
-        .testTarget(name: "XCTJSONKitTests", dependencies: [
-            .target(name: "XCTJSONKit"),
+        .testTarget(name: "JSONTestingTests", dependencies: [
+            .target(name: "JSONTesting"),
         ]),
     ]
 )
