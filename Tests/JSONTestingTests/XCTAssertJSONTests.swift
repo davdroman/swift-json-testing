@@ -134,6 +134,21 @@ final class XCTAssertJSONTests: XCTestCase {
         )
         #endif
     }
+    
+    func testXCTAssertJSONDecodingPassingData() throws {
+        struct Foo: Codable, Equatable {
+            let bar: Int
+        }
+        let data = try XCTUnwrap(
+            """
+            {
+                "bar": 237
+            }
+            """.data(using: .utf8)
+        )
+        let expected = Foo(bar: 237)
+        try XCTAssertJSONDecoding(data, expected)
+    }
 }
 
 #if !os(Linux)

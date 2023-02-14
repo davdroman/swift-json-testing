@@ -53,3 +53,15 @@ public func XCTAssertJSONDecoding<T>(
     let decodable = try decodable()
     XCTAssertNoDifference(sut, decodable, message(), file: file, line: line)
 }
+
+public func XCTAssertJSONDecoding<T>(
+    _ jsonData: @autoclosure () throws -> Data,
+    _ decodable: @autoclosure () throws -> T,
+    decoder: JSONDecoder = XCTAssertJSON.configuration.decoder,
+    _ message: @autoclosure () -> String = "",
+    file: StaticString = #filePath,
+    line: UInt = #line
+) throws where T: Decodable, T: Equatable {
+    let json = try JSON(data: jsonData())
+    try XCTAssertJSONDecoding(json, decodable(), decoder: decoder, message(), file: file, line: line)
+}
