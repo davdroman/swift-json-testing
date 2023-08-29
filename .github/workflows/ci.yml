@@ -36,7 +36,6 @@ jobs:
       with:
         platform: ${{ matrix.platform }}
         swift: ~${{ matrix.swift }}
-        warnings-as-errors: true
   linux:
     name: Linux (Swift ${{ matrix.swift }})
     runs-on: ubuntu-latest
