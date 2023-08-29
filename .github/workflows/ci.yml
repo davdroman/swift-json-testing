@@ -27,9 +27,9 @@ jobs:
           - tvOS
           - watchOS
         swift:
-          - 5.5
-          - 5.6
           - 5.7
+          - 5.8
+          - 5.9
     steps:
     - uses: actions/checkout@v2
     - uses: mxcl/xcodebuild@v1
@@ -44,9 +44,9 @@ jobs:
       fail-fast: false
       matrix:
         swift:
-          - 5.5
-          - 5.6
           - 5.7
+          - 5.8
+          - 5.9
     container:
       image: swift:${{ matrix.swift }}
     steps:
