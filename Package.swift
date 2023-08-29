@@ -26,5 +26,5 @@ let package = Package(
 )
 
 package.dependencies = [
-    .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "0.2.0"),
+    .package(url: "https://github.com/pointfreeco/swift-custom-dump", from: "1.0.0"),
 ]
