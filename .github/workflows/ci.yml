@@ -31,7 +31,7 @@ jobs:
           - 5.8
           - 5.9
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - uses: mxcl/xcodebuild@v2
       with:
         platform: ${{ matrix.platform }}
@@ -49,5 +49,5 @@ jobs:
     container:
       image: swift:${{ matrix.swift }}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - run: swift test --parallel -Xswiftc -warnings-as-errors
