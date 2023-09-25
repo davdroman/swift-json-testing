@@ -1,6 +1,6 @@
 import Foundation
 
-public enum JSON: Hashable {
+public enum JSON: Hashable, Sendable {
     case string(String)
     case number(Decimal)
     indirect case object([String: JSON])
